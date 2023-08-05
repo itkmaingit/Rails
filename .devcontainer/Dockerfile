@@ -1,11 +1,11 @@
-FROM ubuntu:22.04
+FROM ruby:3.1
 
-RUN apt-get update \
-    && apt-get install -y sudo
+ARG RUBYGEMS_VERSION=3.3.20
+
+RUN apt update \
+    && apt install -y sudo
 
 ENV SHELL bash
-ENV LC_CTYPE en_US.UTF-8
-ENV LC_ALL en_US.UTF-8
 
 ARG USERNAME=node
 RUN useradd -m $USERNAME && \
@@ -14,4 +14,15 @@ RUN useradd -m $USERNAME && \
 
 USER $USERNAME
 WORKDIR /home/node/works
+
+COPY Gemfile /home/node/works/Gemfile
+COPY Gemfile.lock /home/node/works/Gemfile.lock
+
+RUN sudo gem update --system ${RUBYGEMS_VERSION} && \
+    sudo bundle install
+
 COPY . /home/node/works
+
+# COPY entrypoint.sh /usr/bin/
+# RUN sudo chmod +x /usr/bin/entrypoint.sh
+# ENTRYPOINT ["entrypoint.sh"]
