@@ -1,9 +1,15 @@
-FROM node:18
-RUN apt update && \
-    apt install -y git build-essential cmake clang libssl-dev less man-db sudo
+FROM ubuntu:22.04
+
+RUN apt-get update \
+    && apt-get install -y sudo
+
+ENV SHELL bash
+ENV LC_CTYPE en_US.UTF-8
+ENV LC_ALL en_US.UTF-8
 
 ARG USERNAME=node
-RUN echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME && \
+RUN useradd -m $USERNAME && \
+    echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME && \
     chmod 0440 /etc/sudoers.d/$USERNAME
 
 USER $USERNAME
