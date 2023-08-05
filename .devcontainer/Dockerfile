@@ -15,14 +15,10 @@ RUN useradd -m $USERNAME && \
 USER $USERNAME
 WORKDIR /home/node/works
 
-COPY Gemfile /home/node/works/Gemfile
-COPY Gemfile.lock /home/node/works/Gemfile.lock
+
+ADD works /home/node/works
+
+RUN sudo chown $USERNAME Gemfile
 
 RUN sudo gem update --system ${RUBYGEMS_VERSION} && \
     sudo bundle install
-
-COPY . /home/node/works
-
-# COPY entrypoint.sh /usr/bin/
-# RUN sudo chmod +x /usr/bin/entrypoint.sh
-# ENTRYPOINT ["entrypoint.sh"]

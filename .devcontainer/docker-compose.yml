@@ -8,31 +8,27 @@ services:
     working_dir: /home/node/works
     volumes:
       - ./works:/home/node/works
-    command:
-      #   - sleep infinity
-      # - /bin/bash -c "rm -f tmp/pids/server.pid
-
     ports:
       - 3001:3001
-    # depends_on:
-    #   - db
-    # stdin_open: true
-#   db:
-#     image: mysql:5.7
-#     # M1のCPUは、linux/arm64/v8なのですが、使用しようとしたimageがこれに対応していないというエラーが起きる
-#     # m1はplatformを指定して、linux/amd64にエミュレートする指定をすることで正常に動くようになります
-#     platform: linux/amd64
-#     # DBのレコードが日本語だと文字化けするので、utf8をセットする
-#     command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
-#     volumes:
-#       - db-volume:/var/lib/mysql
-#     # 環境変数
-#     environment:
-#       MYSQL_ROOT_PASSWORD: password
-#       TZ: "Asia/Tokyo"
-#     ports:
-#       - "3306:3306"
-# # PC上にdb-volumeという名前でボリューム（データ領域）が作成される
-# # コンテナを作り直したとしてもPC上に残るようにするために設定
-# volumes:
-#   db-volume:
+    depends_on:
+      - db
+    stdin_open: true
+  db:
+    image: mysql:5.7
+    # M1のCPUは、linux/arm64/v8なのですが、使用しようとしたimageがこれに対応していないというエラーが起きる
+    # m1はplatformを指定して、linux/amd64にエミュレートする指定をすることで正常に動くようになります
+    platform: linux/amd64
+    # DBのレコードが日本語だと文字化けするので、utf8をセットする
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
+    volumes:
+      - db-volume:/var/lib/mysql
+    # 環境変数
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      TZ: "Asia/Tokyo"
+    ports:
+      - "3306:3306"
+# PC上にdb-volumeという名前でボリューム（データ領域）が作成される
+# コンテナを作り直したとしてもPC上に残るようにするために設定
+volumes:
+  db-volume:
